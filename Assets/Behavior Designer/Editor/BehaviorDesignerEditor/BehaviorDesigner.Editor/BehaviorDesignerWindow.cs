@@ -264,11 +264,17 @@ namespace BehaviorDesigner.Editor
                 mGridMaterial.hideFlags = (HideFlags)(61);
                 mGridMaterial.shader.hideFlags = (HideFlags)(61);
             }
-            EditorApplication.projectWindowChanged = (EditorApplication.CallbackFunction)Delegate.Combine(EditorApplication.projectWindowChanged, new EditorApplication.CallbackFunction(OnProjectWindowChange));
-            EditorApplication.playmodeStateChanged = (EditorApplication.CallbackFunction)Delegate.Combine(EditorApplication.playmodeStateChanged, new EditorApplication.CallbackFunction(OnPlaymodeStateChange));
+            EditorApplication.projectChanged += OnProjectWindowChange;
+            EditorApplication.playModeStateChanged += OnPlaymodeStateChange;
             Undo.undoRedoPerformed = (Undo.UndoRedoCallback)Delegate.Combine(Undo.undoRedoPerformed, new Undo.UndoRedoCallback(OnUndoRedo));
             Init();
             SetBehaviorManager();
+        }
+
+        public void OnDisable()
+        {
+            EditorApplication.projectChanged -= OnProjectWindowChange;
+            EditorApplication.playModeStateChanged -= OnPlaymodeStateChange;
         }
 
         public void OnFocus()
@@ -776,22 +782,22 @@ namespace BehaviorDesigner.Editor
             GUI.enabled = true;
         }
 
-        public void OnPlaymodeStateChange()
+        public void OnPlaymodeStateChange(PlayModeStateChange _playModeStateChange)
         {
             if (EditorApplication.isPlaying && !EditorApplication.isPaused)
             {
-                if (this.mBehaviorManager == null)
+                if (mBehaviorManager == null)
                 {
-                    this.SetBehaviorManager();
-                    if (this.mBehaviorManager == null)
+                    SetBehaviorManager();
+                    if (mBehaviorManager == null)
                     {
                         return;
                     }
                 }
-                if (this.mBehaviorManager.AtBreakpoint && this.mEditorAtBreakpoint)
+                if (mBehaviorManager.AtBreakpoint && mEditorAtBreakpoint)
                 {
-                    this.mEditorAtBreakpoint = false;
-                    this.mBehaviorManager.AtBreakpoint = false;
+                    mEditorAtBreakpoint = false;
+                    mBehaviorManager.AtBreakpoint = false;
                 }
             }
             else if (EditorApplication.isPlaying && EditorApplication.isPaused)
@@ -2555,7 +2561,7 @@ namespace BehaviorDesigner.Editor
             }
             else
             {
-                this.mErrorDetails = null;
+                mErrorDetails = null;
             }
             if (ErrorWindow.instance != null)
             {
@@ -2591,7 +2597,7 @@ namespace BehaviorDesigner.Editor
                 mUpdateCheckRequest = new WWW(text);
                 LastUpdateCheck = DateTime.UtcNow;
             }
-            return this.mUpdateCheckRequest != null;
+            return mUpdateCheckRequest != null;
         }
 
         private void SaveAsAsset()
@@ -2614,14 +2620,14 @@ namespace BehaviorDesigner.Editor
                 }
                 else
                 {
-                    SerializeJSON.Save(this.mActiveBehaviorSource);
+                    SerializeJSON.Save(mActiveBehaviorSource);
                 }
                 ExternalBehavior externalBehavior = CreateInstance(type) as ExternalBehavior;
                 externalBehavior.SetBehaviorSource(new BehaviorSource(externalBehavior)
                 {
-                    behaviorName = this.mActiveBehaviorSource.behaviorName,
-                    behaviorDescription = this.mActiveBehaviorSource.behaviorDescription,
-                    TaskData = this.mActiveBehaviorSource.TaskData
+                    behaviorName = mActiveBehaviorSource.behaviorName,
+                    behaviorDescription = mActiveBehaviorSource.behaviorDescription,
+                    TaskData = mActiveBehaviorSource.TaskData
                 });
                 text = string.Format("Assets/{0}", text.Substring(Application.dataPath.Length + 1));
                 AssetDatabase.DeleteAsset(text);
@@ -2653,16 +2659,16 @@ namespace BehaviorDesigner.Editor
                 Behavior behavior = gameObject.AddComponent(type) as Behavior;
                 behavior.SetBehaviorSource(new BehaviorSource(behavior)
                 {
-                    behaviorName = this.mActiveBehaviorSource.behaviorName,
-                    behaviorDescription = this.mActiveBehaviorSource.behaviorDescription,
-                    TaskData = this.mActiveBehaviorSource.TaskData
+                    behaviorName = mActiveBehaviorSource.behaviorName,
+                    behaviorDescription = mActiveBehaviorSource.behaviorDescription,
+                    TaskData = mActiveBehaviorSource.TaskData
                 });
                 text = string.Format("Assets/{0}", text.Substring(Application.dataPath.Length + 1));
                 AssetDatabase.DeleteAsset(text);
-                GameObject activeObject = PrefabUtility.CreatePrefab(text, gameObject);
+                GameObject activeObject = PrefabUtility.SaveAsPrefabAsset(gameObject, text);
                 DestroyImmediate(gameObject, true);
                 AssetDatabase.ImportAsset(text);
-                Selection.activeObject = (activeObject);
+                Selection.activeObject = activeObject;
             }
             else if (Path.GetExtension(text).Equals(".prefab"))
             {

@@ -54,7 +54,7 @@ namespace BehaviorDesigner.Runtime
 			}
 			if (dictionary.ContainsKey("RootTask"))
 			{
-				behaviorSource.RootTask = DeserializeJSON.DeserializeTask(behaviorSource, dictionary["RootTask"] as Dictionary<string, object>, ref dictionary2, taskData.fieldSerializationData.unityObjects);
+				behaviorSource.RootTask = DeserializeTask(behaviorSource, dictionary["RootTask"] as Dictionary<string, object>, ref dictionary2, taskData.fieldSerializationData.unityObjects);
 			}
 			if (dictionary.ContainsKey("DetachedTasks"))
 			{

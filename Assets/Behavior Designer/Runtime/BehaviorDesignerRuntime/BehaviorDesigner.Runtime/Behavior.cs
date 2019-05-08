@@ -588,7 +588,7 @@ namespace BehaviorDesigner.Runtime
 
 		public T FindTask<T>() where T : Task
 		{
-			return this.FindTask<T>(this.mBehaviorSource.RootTask);
+			return this.FindTask<T>(mBehaviorSource.RootTask);
 		}
 
 		private T FindTask<T>(Task task) where T : Task
@@ -602,14 +602,14 @@ namespace BehaviorDesigner.Runtime
 			{
 				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
-					T result = (T)((object)null);
-					if ((result = this.FindTask<T>(parentTask.Children[i])) != null)
+					T result = null;
+					if ((result = FindTask<T>(parentTask.Children[i])) != null)
 					{
 						return result;
 					}
 				}
 			}
-			return (T)((object)null);
+			return null;
 		}
 
 		public List<T> FindTasks<T>() where T : Task
@@ -638,7 +638,7 @@ namespace BehaviorDesigner.Runtime
 
 		public Task FindTaskWithName(string taskName)
 		{
-			return this.FindTaskWithName(taskName, this.mBehaviorSource.RootTask);
+			return FindTaskWithName(taskName, mBehaviorSource.RootTask);
 		}
 
 		private Task FindTaskWithName(string taskName, Task task)
@@ -653,7 +653,7 @@ namespace BehaviorDesigner.Runtime
 				for (int i = 0; i < parentTask.Children.Count; i++)
 				{
 					Task result;
-					if ((result = this.FindTaskWithName(taskName, parentTask.Children[i])) != null)
+					if ((result = FindTaskWithName(taskName, parentTask.Children[i])) != null)
 					{
 						return result;
 					}

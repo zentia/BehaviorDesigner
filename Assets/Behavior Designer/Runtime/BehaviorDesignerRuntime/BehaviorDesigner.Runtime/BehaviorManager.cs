@@ -497,7 +497,7 @@ namespace BehaviorDesigner.Runtime
 				}
 				return;
 			}
-			BehaviorManager.TaskAddData taskAddData = ObjectPool.Get<BehaviorManager.TaskAddData>();
+			TaskAddData taskAddData = ObjectPool.Get<TaskAddData>();
 			taskAddData.Initialize();
 			behavior.CheckForSerialization();
 			Task rootTask = behavior.GetBehaviorSource().RootTask;
