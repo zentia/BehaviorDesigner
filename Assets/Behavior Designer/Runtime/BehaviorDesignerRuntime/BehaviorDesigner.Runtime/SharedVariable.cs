@@ -28,11 +28,11 @@ namespace BehaviorDesigner.Runtime
 		{
 			get
 			{
-				return this.mIsShared;
+				return mIsShared;
 			}
 			set
 			{
-				this.mIsShared = value;
+				mIsShared = value;
 			}
 		}
 
@@ -40,11 +40,11 @@ namespace BehaviorDesigner.Runtime
 		{
 			get
 			{
-				return this.mIsGlobal;
+				return mIsGlobal;
 			}
 			set
 			{
-				this.mIsGlobal = value;
+				mIsGlobal = value;
 			}
 		}
 
@@ -52,11 +52,11 @@ namespace BehaviorDesigner.Runtime
 		{
 			get
 			{
-				return this.mName;
+				return mName;
 			}
 			set
 			{
-				this.mName = value;
+				mName = value;
 			}
 		}
 
@@ -162,9 +162,9 @@ namespace BehaviorDesigner.Runtime
 					'/'
 				});
 				GameObject gameObject;
-				if (!object.Equals(base.PropertyMappingOwner, null))
+				if (!Equals(PropertyMappingOwner, null))
 				{
-					gameObject = base.PropertyMappingOwner;
+					gameObject = PropertyMappingOwner;
 				}
 				else
 				{

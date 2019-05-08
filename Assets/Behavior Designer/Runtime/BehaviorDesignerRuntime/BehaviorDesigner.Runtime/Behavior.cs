@@ -255,7 +255,7 @@ namespace BehaviorDesigner.Runtime
 
 		public BehaviorSource GetBehaviorSource()
 		{
-			return this.mBehaviorSource;
+			return mBehaviorSource;
 		}
 
 		public void SetBehaviorSource(BehaviorSource behaviorSource)

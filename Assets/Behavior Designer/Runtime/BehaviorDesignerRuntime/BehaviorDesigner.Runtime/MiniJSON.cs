@@ -33,6 +33,7 @@ using System.IO;
 using System.Text;
 using System.Reflection;
 using System.Threading;
+using UnityEngine;
 
 namespace MiniJSON {
     // Example usage:
@@ -347,16 +348,17 @@ namespace MiniJSON {
                                                     }
                                                     catch (Exception var_29_560)
                                                     {
+                                                        Debug.LogException(var_29_560);
                                                     }
                                                 }
                                                 flag = true;
                                             }
                                         }
                                         break;
-                                    case Json.DataType.Object:
+                                    case DataType.Object:
                                         {
                                             object output2 = Activator.CreateInstance(fieldType);
-                                            obj = Json.ToObject(output2, dictionary[fieldInfo.Name]);
+                                            obj = ToObject(output2, dictionary[fieldInfo.Name]);
                                             flag = true;
                                             break;
                                         }

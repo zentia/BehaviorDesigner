@@ -37,11 +37,11 @@ namespace BehaviorDesigner.Runtime
 		{
 			get
 			{
-				return this.behaviorID;
+				return behaviorID;
 			}
 			set
 			{
-				this.behaviorID = value;
+				behaviorID = value;
 			}
 		}
 
@@ -49,7 +49,7 @@ namespace BehaviorDesigner.Runtime
 		{
 			get
 			{
-				return this.mEntryTask;
+				return mEntryTask;
 			}
 			set
 			{
@@ -61,11 +61,11 @@ namespace BehaviorDesigner.Runtime
 		{
 			get
 			{
-				return this.mRootTask;
+				return mRootTask;
 			}
 			set
 			{
-				this.mRootTask = value;
+				mRootTask = value;
 			}
 		}
 
@@ -73,11 +73,11 @@ namespace BehaviorDesigner.Runtime
 		{
 			get
 			{
-				return this.mDetachedTasks;
+				return mDetachedTasks;
 			}
 			set
 			{
-				this.mDetachedTasks = value;
+				mDetachedTasks = value;
 			}
 		}
 
@@ -85,7 +85,7 @@ namespace BehaviorDesigner.Runtime
 		{
 			get
 			{
-				this.CheckForSerialization(false, null);
+				CheckForSerialization(false);
 				return this.mVariables;
 			}
 			set
@@ -137,19 +137,19 @@ namespace BehaviorDesigner.Runtime
 
 		public BehaviorSource(IBehavior owner)
 		{
-			this.Initialize(owner);
+			Initialize(owner);
 		}
 
 		public void Initialize(IBehavior owner)
 		{
-			this.mOwner = owner;
+			mOwner = owner;
 		}
 
 		public void Save(Task entryTask, Task rootTask, List<Task> detachedTasks)
 		{
-			this.mEntryTask = entryTask;
-			this.mRootTask = rootTask;
-			this.mDetachedTasks = detachedTasks;
+			mEntryTask = entryTask;
+			mRootTask = rootTask;
+			mDetachedTasks = detachedTasks;
 		}
 
 		public void Load(out Task entryTask, out Task rootTask, out List<Task> detachedTasks)
@@ -161,7 +161,7 @@ namespace BehaviorDesigner.Runtime
 
 		public bool CheckForSerialization(bool force, BehaviorSource behaviorSource = null)
 		{
-			bool flag = (behaviorSource == null) ? this.HasSerialized : behaviorSource.HasSerialized;
+			bool flag = (behaviorSource == null) ? HasSerialized : behaviorSource.HasSerialized;
 			if (!flag || force)
 			{
 				if (behaviorSource != null)
@@ -208,7 +208,7 @@ namespace BehaviorDesigner.Runtime
 
 		public List<SharedVariable> GetAllVariables()
 		{
-			this.CheckForSerialization(false, null);
+			CheckForSerialization(false, null);
 			return this.mVariables;
 		}
 
@@ -224,7 +224,7 @@ namespace BehaviorDesigner.Runtime
 			}
 			sharedVariable.Name = name;
 			int index;
-			if (this.mSharedVariableIndex != null && this.mSharedVariableIndex.TryGetValue(name, out index))
+			if (this.mSharedVariableIndex != null && mSharedVariableIndex.TryGetValue(name, out index))
 			{
 				SharedVariable sharedVariable2 = this.mVariables[index];
 				if (!sharedVariable2.GetType().Equals(typeof(SharedVariable)) && !sharedVariable2.GetType().Equals(sharedVariable.GetType()))
@@ -245,7 +245,7 @@ namespace BehaviorDesigner.Runtime
 
 		public void UpdateVariableName(SharedVariable sharedVariable, string name)
 		{
-			this.CheckForSerialization(false, null);
+			CheckForSerialization(false, null);
 			sharedVariable.Name = name;
 			this.UpdateVariablesIndex();
 		}

@@ -766,7 +766,7 @@ namespace BehaviorDesigner.Editor
                     this.LoadBehavior(behaviorSource2, true, false);
                 }
             }
-            if (this.Draw() && this.mGUITickCount > 1)
+            if (Draw() && mGUITickCount > 1)
             {
                 base.Repaint();
                 this.mGUITickCount = 0;
@@ -932,17 +932,17 @@ namespace BehaviorDesigner.Editor
             Color backgroundColor = GUI.backgroundColor;
             GUI.color = (Color.white);
             GUI.backgroundColor = (Color.white);
-            this.DrawFileToolbar();
-            this.DrawDebugToolbar();
-            this.DrawPropertiesBox();
-            if (this.DrawGraphArea())
+            DrawFileToolbar();
+            DrawDebugToolbar();
+            DrawPropertiesBox();
+            if (DrawGraphArea())
             {
                 result = true;
             }
-            this.DrawPreferencesPane();
-            if (this.mTakingScreenshot)
+            DrawPreferencesPane();
+            if (mTakingScreenshot)
             {
-                GUI.DrawTexture(new Rect(0f, 0f, (float)Screen.width, (float)Screen.height), BehaviorDesignerUtility.ScreenshotBackgroundTexture, 0, false);
+                GUI.DrawTexture(new Rect(0f, 0f, Screen.width, Screen.height), BehaviorDesignerUtility.ScreenshotBackgroundTexture, 0, false);
             }
             GUI.color = (color);
             GUI.backgroundColor = (backgroundColor);
@@ -951,9 +951,9 @@ namespace BehaviorDesigner.Editor
 
         private void DrawFileToolbar()
         {
-            GUILayout.BeginArea(this.mFileToolBarRect, EditorStyles.toolbar);
-            GUILayout.BeginHorizontal(new GUILayoutOption[0]);
-            if (GUILayout.Button(BehaviorDesignerUtility.HistoryBackwardTexture, EditorStyles.toolbarButton, new GUILayoutOption[0]) && (this.mBehaviorSourceHistoryIndex > 0 || (this.mActiveBehaviorSource == null && this.mBehaviorSourceHistoryIndex == 0)))
+            GUILayout.BeginArea(mFileToolBarRect, EditorStyles.toolbar);
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button(BehaviorDesignerUtility.HistoryBackwardTexture, EditorStyles.toolbarButton) && (mBehaviorSourceHistoryIndex > 0 || (this.mActiveBehaviorSource == null && this.mBehaviorSourceHistoryIndex == 0)))
             {
                 BehaviorSource behaviorSource = null;
                 if (this.mActiveBehaviorSource == null)
@@ -966,16 +966,16 @@ namespace BehaviorDesigner.Editor
                     behaviorSource = this.BehaviorSourceFromIBehaviorHistory(this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] as IBehavior);
                     if (behaviorSource == null || behaviorSource.Owner == null || behaviorSource.Owner.GetObject() == null)
                     {
-                        this.mBehaviorSourceHistory.RemoveAt(this.mBehaviorSourceHistoryIndex);
+                        this.mBehaviorSourceHistory.RemoveAt(mBehaviorSourceHistoryIndex);
                         behaviorSource = null;
                     }
                 }
                 if (behaviorSource != null)
                 {
-                    this.LoadBehavior(behaviorSource, false);
+                    LoadBehavior(behaviorSource, false);
                 }
             }
-            if (GUILayout.Button(BehaviorDesignerUtility.HistoryForwardTexture, EditorStyles.toolbarButton, new GUILayoutOption[0]))
+            if (GUILayout.Button(BehaviorDesignerUtility.HistoryForwardTexture, EditorStyles.toolbarButton))
             {
                 BehaviorSource behaviorSource2 = null;
                 if (this.mBehaviorSourceHistoryIndex < this.mBehaviorSourceHistory.Count - 1)
@@ -1019,7 +1019,7 @@ namespace BehaviorDesigner.Editor
                         GUILayout.Width(140f)
             }) && this.mActiveBehaviorSource != null)
             {
-                this.BuildBreadcrumbMenus(BehaviorDesignerWindow.BreadcrumbMenuType.Behavior);
+                this.BuildBreadcrumbMenus(BreadcrumbMenuType.Behavior);
                 this.mBreadcrumbBehaviorMenu.ShowAsContext();
             }
             if (GUILayout.Button("Referenced Behaviors", EditorStyles.toolbarPopup, new GUILayoutOption[]
@@ -1034,7 +1034,7 @@ namespace BehaviorDesigner.Editor
                     this.mReferencedBehaviorsMenu = new GenericMenu();
                     for (int i = 0; i < list.Count; i++)
                     {
-                        this.mReferencedBehaviorsMenu.AddItem(new GUIContent(list[i].ToString()), false, new GenericMenu.MenuFunction2(this.BehaviorSelectionCallback), list[i]);
+                        this.mReferencedBehaviorsMenu.AddItem(new GUIContent(list[i].ToString()), false, new GenericMenu.MenuFunction2(BehaviorSelectionCallback), list[i]);
                     }
                     this.mReferencedBehaviorsMenu.ShowAsContext();
                 }
@@ -1060,7 +1060,7 @@ namespace BehaviorDesigner.Editor
             {
                 if (this.mActiveObject != null)
                 {
-                    this.AddBehavior();
+                    AddBehavior();
                 }
                 else
                 {
@@ -1114,23 +1114,21 @@ namespace BehaviorDesigner.Editor
             {
                         GUILayout.Width(96f)
             }))
+            if (mActiveBehaviorSource != null)
             {
-                if (this.mActiveBehaviorSource != null)
-                {
-                    this.TakeScreenshot();
-                }
-                else
-                {
-                    EditorUtility.DisplayDialog("Unable to Take Screenshot", "Select a behavior tree from within the scene.", "OK");
-                }
+                TakeScreenshot();
+            }
+            else
+            {
+                EditorUtility.DisplayDialog("Unable to Take Screenshot", "Select a behavior tree from within the scene.", "OK");
             }
             GUILayout.FlexibleSpace();
-            if (GUILayout.Button("Preferences", (!this.mShowPrefPane) ? EditorStyles.toolbarButton : BehaviorDesignerUtility.ToolbarButtonSelectionGUIStyle, new GUILayoutOption[]
+            if (GUILayout.Button("Preferences", (!mShowPrefPane) ? EditorStyles.toolbarButton : BehaviorDesignerUtility.ToolbarButtonSelectionGUIStyle, new GUILayoutOption[]
             {
                         GUILayout.Width(80f)
             }))
             {
-                this.mShowPrefPane = !this.mShowPrefPane;
+                mShowPrefPane = !mShowPrefPane;
             }
             GUILayout.EndVertical();
             GUILayout.EndArea();
@@ -1417,8 +1415,8 @@ namespace BehaviorDesigner.Editor
             if (Selection.activeGameObject != null)
             {
                 GameObject activeGameObject = Selection.activeGameObject;
-                this.mActiveObject = Selection.activeObject;
-                this.mGraphDesigner = ScriptableObject.CreateInstance<GraphDesigner>();
+                mActiveObject = Selection.activeObject;
+                mGraphDesigner = CreateInstance<GraphDesigner>();
                 Type type = Type.GetType("BehaviorDesigner.Runtime.BehaviorTree, Assembly-CSharp");
                 if (type == null)
                 {
@@ -1440,8 +1438,8 @@ namespace BehaviorDesigner.Editor
                     components[i].GetBehaviorSource().behaviorName = text;
                     hashSet.Add(components[i].GetBehaviorSource().behaviorName);
                 }
-                this.LoadBehavior(behavior.GetBehaviorSource(), false);
-                base.Repaint();
+                LoadBehavior(behavior.GetBehaviorSource(), false);
+                Repaint();
                 if (BehaviorDesignerPreferences.GetBool(BDPreferences.AddGameGUIComponent))
                 {
                     type = TaskUtility.GetTypeWithinAssembly("BehaviorDesigner.Runtime.BehaviorGameGUI");
@@ -1456,11 +1454,11 @@ namespace BehaviorDesigner.Editor
             {
                 return;
             }
-            if (this.mActiveObject as GameObject != null && (this.mActiveBehaviorSource.EntryTask == null || (this.mActiveBehaviorSource.EntryTask != null && EditorUtility.DisplayDialog("Remove Behavior Tree", "Are you sure you want to remove this behavior tree?", "Yes", "No"))))
+            if (mActiveObject as GameObject != null && (mActiveBehaviorSource.EntryTask == null || (mActiveBehaviorSource.EntryTask != null && EditorUtility.DisplayDialog("Remove Behavior Tree", "Are you sure you want to remove this behavior tree?", "Yes", "No"))))
             {
-                GameObject gameObject = this.mActiveObject as GameObject;
-                int num = this.IndexForBehavior(this.mActiveBehaviorSource.Owner);
-                BehaviorUndo.DestroyObject(this.mActiveBehaviorSource.Owner.GetObject(), true);
+                GameObject gameObject = mActiveObject as GameObject;
+                int num = IndexForBehavior(mActiveBehaviorSource.Owner);
+                BehaviorUndo.DestroyObject(mActiveBehaviorSource.Owner.GetObject(), true);
                 num--;
                 if (num == -1 && gameObject.GetComponents<Behavior>().Length > 0)
                 {
@@ -1468,14 +1466,14 @@ namespace BehaviorDesigner.Editor
                 }
                 if (num > -1)
                 {
-                    this.LoadBehavior(gameObject.GetComponents<Behavior>()[num].GetBehaviorSource(), true);
+                    LoadBehavior(gameObject.GetComponents<Behavior>()[num].GetBehaviorSource(), true);
                 }
                 else
                 {
-                    this.ClearGraph();
+                    ClearGraph();
                 }
-                this.ClearBreadcrumbMenu();
-                base.Repaint();
+                ClearBreadcrumbMenu();
+                Repaint();
             }
         }
 
@@ -1498,14 +1496,14 @@ namespace BehaviorDesigner.Editor
 
         public NodeDesigner AddTask(Type type, bool useMousePosition)
         {
-            if ((this.mActiveObject as GameObject == null && this.mActiveObject as ExternalBehavior == null) || EditorApplication.isPlaying)
+            if ((mActiveObject as GameObject == null && mActiveObject as ExternalBehavior == null) || EditorApplication.isPlaying)
             {
                 return null;
             }
             Vector2 vector = new Vector2(this.mGraphRect.width / (2f * this.mGraphZoom), 150f);
             if (useMousePosition)
             {
-                this.GetMousePositionInGraph(out vector);
+                GetMousePositionInGraph(out vector);
             }
             vector -= this.mGraphOffset;
             GameObject gameObject = this.mActiveObject as GameObject;
@@ -2165,21 +2163,21 @@ namespace BehaviorDesigner.Editor
 
         private bool RightMouseDown()
         {
-            if (this.IsReferencingTasks())
+            if (IsReferencingTasks())
             {
-                this.DisableReferenceTasks();
+                DisableReferenceTasks();
                 return false;
             }
             Vector2 point;
-            if (!this.GetMousePositionInGraph(out point))
+            if (!GetMousePositionInGraph(out point))
             {
                 return false;
             }
             NodeDesigner nodeDesigner = this.mGraphDesigner.NodeAt(point, this.mGraphOffset);
             if (nodeDesigner == null || !this.mGraphDesigner.IsSelected(nodeDesigner))
             {
-                this.mGraphDesigner.ClearNodeSelection();
-                this.mGraphDesigner.ClearConnectionSelection();
+                mGraphDesigner.ClearNodeSelection();
+                mGraphDesigner.ClearConnectionSelection();
                 if (nodeDesigner != null)
                 {
                     this.mGraphDesigner.Select(nodeDesigner);
@@ -2197,7 +2195,7 @@ namespace BehaviorDesigner.Editor
         private bool MouseZoom()
         {
             Vector2 vector;
-            if (!this.GetMousePositionInGraph(out vector))
+            if (!GetMousePositionInGraph(out vector))
             {
                 return false;
             }
@@ -2215,52 +2213,52 @@ namespace BehaviorDesigner.Editor
         private bool MousePan()
         {
             Vector2 vector;
-            if (!this.GetMousePositionInGraph(out vector))
+            if (!GetMousePositionInGraph(out vector))
             {
                 return false;
             }
             Vector2 vector2 = Event.current.delta;
-            if (Event.current.type == (EventType)6)
+            if (Event.current.type == EventType.ScrollWheel)
             {
                 vector2 *= -1.5f;
-                if (Event.current.modifiers == (EventModifiers)2)
+                if (Event.current.modifiers == EventModifiers.Control)
                 {
                     vector2.x = vector2.y;
                     vector2.y = 0f;
                 }
             }
-            this.ScrollGraph(vector2);
+            ScrollGraph(vector2);
             return true;
         }
 
         private void ScrollGraph(Vector2 amount)
         {
-            this.mGraphOffset += amount / this.mGraphZoom;
-            this.mGraphScrollPosition -= amount;
-            this.mGraphDesigner.GraphDirty();
-            base.Repaint();
+            mGraphOffset += amount / mGraphZoom;
+            mGraphScrollPosition -= amount;
+            mGraphDesigner.GraphDirty();
+            Repaint();
         }
 
         private bool PropertiesInspectorHasFocus()
         {
-            return this.mTaskInspector.HasFocus() || this.mVariableInspector.HasFocus();
+            return mTaskInspector.HasFocus() || mVariableInspector.HasFocus();
         }
 
         private void AddTaskCallback(object obj)
         {
-            this.AddTask((Type)obj, true);
+            AddTask((Type)obj, true);
         }
 
         private void ReplaceTaskCallback(object obj)
         {
             Type type = (Type)obj;
-            if (this.mGraphDesigner.SelectedNodes.Count != 1 || this.mGraphDesigner.SelectedNodes[0].Task.GetType().Equals(type))
+            if (mGraphDesigner.SelectedNodes.Count != 1 || mGraphDesigner.SelectedNodes[0].Task.GetType().Equals(type))
             {
                 return;
             }
-            if (this.mGraphDesigner.ReplaceSelectedNode(this.mActiveBehaviorSource, type))
+            if (mGraphDesigner.ReplaceSelectedNode(mActiveBehaviorSource, type))
             {
-                this.SaveBehavior();
+                SaveBehavior();
             }
         }
 
@@ -2520,15 +2518,15 @@ namespace BehaviorDesigner.Editor
 
         public void SaveBehavior()
         {
-            if (this.mActiveBehaviorSource == null || this.ViewOnlyMode(true) || Application.isPlaying)
+            if (mActiveBehaviorSource == null || ViewOnlyMode(true) || Application.isPlaying)
             {
                 return;
             }
-            this.mGraphDesigner.Save(this.mActiveBehaviorSource);
-            this.CheckForErrors();
-            if (this.mGraphDesigner.HasEntryNode())
+            mGraphDesigner.Save(mActiveBehaviorSource);
+            CheckForErrors();
+            if (mGraphDesigner.HasEntryNode())
             {
-                this.mPrevEntryPosition = this.mGraphDesigner.EntryNodePosition();
+                mPrevEntryPosition = mGraphDesigner.EntryNodePosition();
             }
         }
 
@@ -2561,7 +2559,7 @@ namespace BehaviorDesigner.Editor
             }
             if (ErrorWindow.instance != null)
             {
-                ErrorWindow.instance.ErrorDetails = this.mErrorDetails;
+                ErrorWindow.instance.ErrorDetails = mErrorDetails;
                 ErrorWindow.instance.Repaint();
             }
         }
@@ -2575,7 +2573,7 @@ namespace BehaviorDesigner.Editor
                     this.mUpdateCheckRequest = null;
                     return false;
                 }
-                if (!"1.5.5".ToString().Equals(this.mUpdateCheckRequest.text))
+                if (!"1.5.5".Equals(mUpdateCheckRequest.text))
                 {
                     this.LatestVersion = this.mUpdateCheckRequest.text;
                 }
@@ -2590,19 +2588,19 @@ namespace BehaviorDesigner.Editor
                             Application.platform,
                             EditorUserBuildSettings.activeBuildTarget
                 });
-                this.mUpdateCheckRequest = new WWW(text);
-                this.LastUpdateCheck = DateTime.UtcNow;
+                mUpdateCheckRequest = new WWW(text);
+                LastUpdateCheck = DateTime.UtcNow;
             }
             return this.mUpdateCheckRequest != null;
         }
 
         private void SaveAsAsset()
         {
-            if (this.mActiveBehaviorSource == null)
+            if (mActiveBehaviorSource == null)
             {
                 return;
             }
-            string text = EditorUtility.SaveFilePanel("Save Behavior Tree", "Assets", this.mActiveBehaviorSource.behaviorName + ".asset", "asset");
+            string text = EditorUtility.SaveFilePanel("Save Behavior Tree", "Assets", mActiveBehaviorSource.behaviorName + ".asset", "asset");
             if (text.Length != 0 && Application.dataPath.Length < text.Length)
             {
                 Type type = Type.GetType("BehaviorDesigner.Runtime.ExternalBehaviorTree, Assembly-CSharp");
@@ -2618,7 +2616,7 @@ namespace BehaviorDesigner.Editor
                 {
                     SerializeJSON.Save(this.mActiveBehaviorSource);
                 }
-                ExternalBehavior externalBehavior = ScriptableObject.CreateInstance(type) as ExternalBehavior;
+                ExternalBehavior externalBehavior = CreateInstance(type) as ExternalBehavior;
                 externalBehavior.SetBehaviorSource(new BehaviorSource(externalBehavior)
                 {
                     behaviorName = this.mActiveBehaviorSource.behaviorName,
@@ -2633,17 +2631,17 @@ namespace BehaviorDesigner.Editor
             }
             else if (Path.GetExtension(text).Equals(".asset"))
             {
-                UnityEngine.Debug.LogError("Error: Unable to save external behavior tree. The save location must be within the Asset directory.");
+                Debug.LogError("Error: Unable to save external behavior tree. The save location must be within the Asset directory.");
             }
         }
 
         private void SaveAsPrefab()
         {
-            if (this.mActiveBehaviorSource == null)
+            if (mActiveBehaviorSource == null)
             {
                 return;
             }
-            string text = EditorUtility.SaveFilePanel("Save Behavior Tree", "Assets", this.mActiveBehaviorSource.behaviorName + ".prefab", "prefab");
+            string text = EditorUtility.SaveFilePanel("Save Behavior Tree", "Assets", mActiveBehaviorSource.behaviorName + ".prefab", "prefab");
             if (text.Length != 0 && Application.dataPath.Length < text.Length)
             {
                 GameObject gameObject = new GameObject();
@@ -2662,19 +2660,19 @@ namespace BehaviorDesigner.Editor
                 text = string.Format("Assets/{0}", text.Substring(Application.dataPath.Length + 1));
                 AssetDatabase.DeleteAsset(text);
                 GameObject activeObject = PrefabUtility.CreatePrefab(text, gameObject);
-                UnityEngine.Object.DestroyImmediate(gameObject, true);
+                DestroyImmediate(gameObject, true);
                 AssetDatabase.ImportAsset(text);
                 Selection.activeObject = (activeObject);
             }
             else if (Path.GetExtension(text).Equals(".prefab"))
             {
-                UnityEngine.Debug.LogError("Error: Unable to save prefab. The save location must be within the Asset directory.");
+                Debug.LogError("Error: Unable to save prefab. The save location must be within the Asset directory.");
             }
         }
 
         public void LoadBehavior(BehaviorSource behaviorSource, bool loadPrevBehavior)
         {
-            this.LoadBehavior(behaviorSource, loadPrevBehavior, false);
+            LoadBehavior(behaviorSource, loadPrevBehavior, false);
         }
 
         public void LoadBehavior(BehaviorSource behaviorSource, bool loadPrevBehavior, bool inspectorLoad)
@@ -2703,7 +2701,7 @@ namespace BehaviorDesigner.Editor
             this.mActiveBehaviorSource.BehaviorID = this.mActiveBehaviorSource.Owner.GetInstanceID();
             this.mActiveBehaviorID = this.mActiveBehaviorSource.BehaviorID;
             this.mPrevActiveObject = Selection.activeObject;
-            if (this.mBehaviorSourceHistory.Count == 0 || this.mBehaviorSourceHistoryIndex >= this.mBehaviorSourceHistory.Count || this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] == null || ((this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] as IBehavior).GetBehaviorSource() != null && !this.mActiveBehaviorSource.BehaviorID.Equals((this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] as IBehavior).GetBehaviorSource().BehaviorID)))
+            if (this.mBehaviorSourceHistory.Count == 0 || this.mBehaviorSourceHistoryIndex >= mBehaviorSourceHistory.Count || this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] == null || ((this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] as IBehavior).GetBehaviorSource() != null && !this.mActiveBehaviorSource.BehaviorID.Equals((this.mBehaviorSourceHistory[this.mBehaviorSourceHistoryIndex] as IBehavior).GetBehaviorSource().BehaviorID)))
             {
                 for (int i = this.mBehaviorSourceHistory.Count - 1; i > this.mBehaviorSourceHistoryIndex; i--)
                 {
@@ -2757,7 +2755,7 @@ namespace BehaviorDesigner.Editor
             this.mActiveBehaviorSource = null;
             this.CheckForErrors();
             this.UpdateGraphStatus();
-            base.Repaint();
+            Repaint();
         }
     }
 }
