@@ -8,6 +8,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace BehaviorDesigner.Editor
 {
@@ -59,10 +60,10 @@ namespace BehaviorDesigner.Editor
 
         private string[] mBehaviorToolbarStrings = 
         {
-                    "Behavior",
-                    "Tasks",
-                    "Variables",
-                    "Inspector"
+            "Behavior",
+            "Tasks",
+            "Variables",
+            "Inspector"
         };
 
         private string mGraphStatus = string.Empty;
@@ -151,7 +152,7 @@ namespace BehaviorDesigner.Editor
         [SerializeField]
         private bool mIsPlaying;
 
-        private WWW mUpdateCheckRequest;
+        private UnityWebRequest mUpdateCheckRequest;
 
         private DateTime mLastUpdateCheck = DateTime.MinValue;
 
@@ -844,23 +845,22 @@ namespace BehaviorDesigner.Editor
             switch (pref)
             {
                 case BDPreferences.CompactMode:
-                    this.mGraphDesigner.GraphDirty();
+                    mGraphDesigner.GraphDirty();
                     return;
                 case BDPreferences.SnapToGrid:
                 case BDPreferences.ShowTaskDescription:
                 case BDPreferences.UpdateCheck:
                 case BDPreferences.AddGameGUIComponent:
-                    IL_2B:
                     if (pref != BDPreferences.ShowSceneIcon)
                     {
                         return;
                     }
                     goto IL_5D;
                 case BDPreferences.BinarySerialization:
-                    this.SaveBehavior();
+                    SaveBehavior();
                     return;
                 case BDPreferences.ErrorChecking:
-                    this.CheckForErrors();
+                    CheckForErrors();
                     return;
                 case BDPreferences.GizmosViewMode:
                     goto IL_5D;
@@ -871,47 +871,47 @@ namespace BehaviorDesigner.Editor
 
         public void OnInspectorUpdate()
         {
-            if (this.mStepApplication)
+            if (mStepApplication)
             {
                 EditorApplication.Step();
-                this.mStepApplication = false;
+                mStepApplication = false;
             }
-            if (EditorApplication.isPlaying && !EditorApplication.isPaused && this.mActiveBehaviorSource != null && this.mBehaviorManager != null)
+            if (EditorApplication.isPlaying && !EditorApplication.isPaused && mActiveBehaviorSource != null && mBehaviorManager != null)
             {
-                if (this.mUpdateNodeTaskMap)
+                if (mUpdateNodeTaskMap)
                 {
-                    this.UpdateNodeTaskMap();
+                    UpdateNodeTaskMap();
                 }
-                if (this.mBehaviorManager.AtBreakpoint)
+                if (mBehaviorManager.AtBreakpoint)
                 {
-                    this.mBehaviorManager.AtBreakpoint = false;
+                    mBehaviorManager.AtBreakpoint = false;
                 }
-                base.Repaint();
+                Repaint();
             }
-            if (Application.isPlaying && this.mBehaviorManager == null)
+            if (Application.isPlaying && mBehaviorManager == null)
             {
-                this.SetBehaviorManager();
+                SetBehaviorManager();
             }
-            if (this.mBehaviorManager != null && this.mBehaviorManager.Dirty)
+            if (mBehaviorManager != null && mBehaviorManager.Dirty)
             {
-                if (this.mActiveBehaviorSource != null)
+                if (mActiveBehaviorSource != null)
                 {
-                    this.LoadBehavior(this.mActiveBehaviorSource, true, false);
+                    LoadBehavior(mActiveBehaviorSource, true, false);
                 }
-                this.mBehaviorManager.Dirty = false;
+                mBehaviorManager.Dirty = false;
             }
-            if (!EditorApplication.isPlaying && this.mIsPlaying)
+            if (!EditorApplication.isPlaying && mIsPlaying)
             {
-                this.ReloadPreviousBehavior();
+                ReloadPreviousBehavior();
             }
-            this.mIsPlaying = EditorApplication.isPlaying;
-            this.UpdateGraphStatus();
-            this.UpdateCheck();
+            mIsPlaying = EditorApplication.isPlaying;
+            UpdateGraphStatus();
+            UpdateCheck();
         }
 
         private void UpdateNodeTaskMap()
         {
-            if (this.mUpdateNodeTaskMap && this.mBehaviorManager != null)
+            if (mUpdateNodeTaskMap && mBehaviorManager != null)
             {
                 Behavior behavior = this.mActiveBehaviorSource.Owner as Behavior;
                 List<Task> taskList = this.mBehaviorManager.GetTaskList(behavior);
@@ -2464,16 +2464,15 @@ namespace BehaviorDesigner.Editor
 
         private Rect GetSelectionArea()
         {
-            Vector2 vector;
-            if (this.GetMousePositionInGraph(out vector))
+            if (GetMousePositionInGraph(out Vector2 vector))
             {
-                float num = (this.mSelectStartPosition.x >= vector.x) ? vector.x : this.mSelectStartPosition.x;
-                float num2 = (this.mSelectStartPosition.x <= vector.x) ? vector.x : this.mSelectStartPosition.x;
-                float num3 = (this.mSelectStartPosition.y >= vector.y) ? vector.y : this.mSelectStartPosition.y;
-                float num4 = (this.mSelectStartPosition.y <= vector.y) ? vector.y : this.mSelectStartPosition.y;
-                this.mSelectionArea = new Rect(num, num3, num2 - num, num4 - num3);
+                float num = (mSelectStartPosition.x >= vector.x) ? vector.x : mSelectStartPosition.x;
+                float num2 = (mSelectStartPosition.x <= vector.x) ? vector.x : mSelectStartPosition.x;
+                float num3 = (mSelectStartPosition.y >= vector.y) ? vector.y : mSelectStartPosition.y;
+                float num4 = (mSelectStartPosition.y <= vector.y) ? vector.y : mSelectStartPosition.y;
+                mSelectionArea = new Rect(num, num3, num2 - num, num4 - num3);
             }
-            return this.mSelectionArea;
+            return mSelectionArea;
         }
 
         public bool ViewOnlyMode(bool checkExternal)
@@ -2482,14 +2481,14 @@ namespace BehaviorDesigner.Editor
             {
                 return false;
             }
-            if (this.mActiveBehaviorSource == null || this.mActiveBehaviorSource.Owner == null || this.mActiveBehaviorSource.Owner.Equals(null))
+            if (mActiveBehaviorSource == null || mActiveBehaviorSource.Owner == null || mActiveBehaviorSource.Owner.Equals(null))
             {
                 return false;
             }
-            Behavior behavior = this.mActiveBehaviorSource.Owner.GetObject() as Behavior;
+            Behavior behavior = mActiveBehaviorSource.Owner.GetObject() as Behavior;
             if (behavior != null)
             {
-                if (!BehaviorDesignerPreferences.GetBool(BDPreferences.EditablePrefabInstances) && PrefabUtility.GetPrefabType(this.mActiveBehaviorSource.Owner.GetObject()) == (PrefabType)3)
+                if (!BehaviorDesignerPreferences.GetBool(BDPreferences.EditablePrefabInstances) && PrefabUtility.GetPrefabAssetType(mActiveBehaviorSource.Owner.GetObject()) == PrefabAssetType.Model)
                 {
                     return true;
                 }
@@ -2510,7 +2509,7 @@ namespace BehaviorDesigner.Editor
             if (behavior.GetObject() is GameObject)
             {
                 Behavior[] components = (behavior.GetObject() as GameObject).GetComponents<Behavior>();
-                for (int i = 0; i < components.Count<Behavior>(); i++)
+                for (int i = 0; i < components.Count(); i++)
                 {
                     if (components[i].GetBehaviorSource().BehaviorID == behavior.GetBehaviorSource().BehaviorID)
                     {
@@ -2538,24 +2537,24 @@ namespace BehaviorDesigner.Editor
 
         private void CheckForErrors()
         {
-            if (this.mErrorDetails != null)
+            if (mErrorDetails != null)
             {
-                for (int i = 0; i < this.mErrorDetails.Count; i++)
+                for (int i = 0; i < mErrorDetails.Count; i++)
                 {
-                    if (this.mErrorDetails[i].NodeDesigner != null)
+                    if (mErrorDetails[i].NodeDesigner != null)
                     {
-                        this.mErrorDetails[i].NodeDesigner.HasError = false;
+                        mErrorDetails[i].NodeDesigner.HasError = false;
                     }
                 }
             }
             if (BehaviorDesignerPreferences.GetBool(BDPreferences.ErrorChecking))
             {
-                this.mErrorDetails = ErrorCheck.CheckForErrors(this.mActiveBehaviorSource);
-                if (this.mErrorDetails != null)
+                mErrorDetails = ErrorCheck.CheckForErrors(mActiveBehaviorSource);
+                if (mErrorDetails != null)
                 {
-                    for (int j = 0; j < this.mErrorDetails.Count; j++)
+                    for (int j = 0; j < mErrorDetails.Count; j++)
                     {
-                        this.mErrorDetails[j].NodeDesigner.HasError = true;
+                        mErrorDetails[j].NodeDesigner.HasError = true;
                     }
                 }
             }
@@ -2572,29 +2571,23 @@ namespace BehaviorDesigner.Editor
 
         private bool UpdateCheck()
         {
-            if (this.mUpdateCheckRequest != null && this.mUpdateCheckRequest.isDone)
+            if (mUpdateCheckRequest != null && mUpdateCheckRequest.isDone)
             {
-                if (!string.IsNullOrEmpty(this.mUpdateCheckRequest.error))
+                if (!string.IsNullOrEmpty(mUpdateCheckRequest.error))
                 {
-                    this.mUpdateCheckRequest = null;
+                    mUpdateCheckRequest = null;
                     return false;
                 }
-                if (!"1.5.5".Equals(mUpdateCheckRequest.text))
+                if (!"1.5.5".Equals(mUpdateCheckRequest.downloadHandler.text))
                 {
-                    this.LatestVersion = this.mUpdateCheckRequest.text;
+                    LatestVersion = mUpdateCheckRequest.downloadHandler.text;
                 }
-                this.mUpdateCheckRequest = null;
+                mUpdateCheckRequest = null;
             }
-            if (BehaviorDesignerPreferences.GetBool(BDPreferences.UpdateCheck) && DateTime.Compare(this.LastUpdateCheck.AddDays(1.0), DateTime.UtcNow) < 0)
+            if (BehaviorDesignerPreferences.GetBool(BDPreferences.UpdateCheck) && DateTime.Compare(LastUpdateCheck.AddDays(1.0), DateTime.UtcNow) < 0)
             {
-                string text = string.Format("http://www.opsive.com/assets/BehaviorDesigner/UpdateCheck.php?version={0}&unityversion={1}&devplatform={2}&targetplatform={3}", new object[]
-                {
-                            "1.5.5",
-                            Application.unityVersion,
-                            Application.platform,
-                            EditorUserBuildSettings.activeBuildTarget
-                });
-                mUpdateCheckRequest = new WWW(text);
+                string text = string.Format("http://www.opsive.com/assets/BehaviorDesigner/UpdateCheck.php?version={0}&unityversion={1}&devplatform={2}&targetplatform={3}", "1.5.5",Application.unityVersion, Application.platform,EditorUserBuildSettings.activeBuildTarget);
+                mUpdateCheckRequest = UnityWebRequest.Get(text);
                 LastUpdateCheck = DateTime.UtcNow;
             }
             return mUpdateCheckRequest != null;

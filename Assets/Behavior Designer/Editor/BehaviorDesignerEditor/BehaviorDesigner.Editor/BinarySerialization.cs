@@ -481,7 +481,7 @@ namespace BehaviorDesigner.Editor
 					list.AddRange(BitConverter.GetBytes(keys[i].value));
 					list.AddRange(BitConverter.GetBytes(keys[i].inTangent));
 					list.AddRange(BitConverter.GetBytes(keys[i].outTangent));
-					list.AddRange(BitConverter.GetBytes(keys[i].tangentMode));
+					list.AddRange(BitConverter.GetBytes((float)AnimationUtility.GetKeyLeftTangentMode(animationCurve, i)));
 				}
 			}
 			else
@@ -495,12 +495,12 @@ namespace BehaviorDesigner.Editor
 
 		private static void AddByteData(Type fieldType, ICollection<byte> bytes)
 		{
-			BinarySerialization.fieldSerializationData.dataPosition.Add(BinarySerialization.fieldSerializationData.byteData.Count);
+			fieldSerializationData.dataPosition.Add(fieldSerializationData.byteData.Count);
 			if (bytes != null)
 			{
-				BinarySerialization.fieldSerializationData.byteData.AddRange(bytes);
+				fieldSerializationData.byteData.AddRange(bytes);
 			}
-			BinarySerialization.fieldIndex++;
+			fieldIndex++;
 		}
 	}
 }

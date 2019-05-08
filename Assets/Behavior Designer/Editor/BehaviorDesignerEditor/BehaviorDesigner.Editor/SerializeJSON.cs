@@ -286,7 +286,7 @@ namespace BehaviorDesigner.Editor
 										keys[k].value,
 										keys[k].inTangent,
 										keys[k].outTangent,
-										keys[k].tangentMode
+										AnimationUtility.GetKeyLeftTangentMode(animationCurve, k)
 									});
 								}
 								dictionary2.Add("Keys", list3);
@@ -298,7 +298,7 @@ namespace BehaviorDesigner.Editor
 						else
 						{
 							Dictionary<string, object> value = new Dictionary<string, object>();
-							SerializeJSON.SerializeFields(allFields[i].GetValue(obj), ref value, ref unityObjects);
+							SerializeFields(allFields[i].GetValue(obj), ref value, ref unityObjects);
 							dict.Add(allFields[i].FieldType + "," + allFields[i].Name, value);
 						}
 					}
