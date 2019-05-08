@@ -26,7 +26,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityCharacterController
         public override TaskStatus OnUpdate()
         {
             if (characterController == null) {
-                Debug.LogWarning("CharacterController is null");
+                UnityEngine.Debug.LogWarning("CharacterController is null");
                 return TaskStatus.Failure;
             }
 

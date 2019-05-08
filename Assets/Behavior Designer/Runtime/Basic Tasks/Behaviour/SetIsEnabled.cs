@@ -6,7 +6,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityBehaviour
     [TaskDescription("Enables/Disables the object. Returns Success.")]
     public class SetIsEnabled : Action
     {
-        [Tooltip("The Object to use")]
+        [Tooltip("The UnityEngine.Object to use")]
         public SharedObject specifiedObject;
         [Tooltip("The enabled/disabled state")]
         public SharedBool enabled;
@@ -14,7 +14,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityBehaviour
         public override TaskStatus OnUpdate()
         {
             if (specifiedObject == null && !(specifiedObject.Value is UnityEngine.Behaviour)) {
-                Debug.LogWarning("SpecifiedObject is null or not a subclass of UnityEngine.Behaviour");
+                UnityEngine.Debug.LogWarning("SpecifiedObject is null or not a subclass of UnityEngine.Behaviour");
                 return TaskStatus.Failure;
             }
 

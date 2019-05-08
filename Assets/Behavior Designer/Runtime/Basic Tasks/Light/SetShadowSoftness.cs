@@ -28,7 +28,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityLight
         public override TaskStatus OnUpdate()
         {
             if (light == null) {
-                Debug.LogWarning("Light is null");
+                UnityEngine.Debug.LogWarning("Light is null");
                 return TaskStatus.Failure;
             }
 

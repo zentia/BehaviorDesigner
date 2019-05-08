@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityDebug
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityUnityEngine.Debug
 {
-    [TaskCategory("Basic/Debug")]
-    [TaskDescription("Draws a debug line")]
+    [TaskCategory("Basic/UnityEngine.Debug")]
+    [TaskDescription("Draws a UnityEngine.Debug line")]
     public class DrawLine : Action
     {
         [Tooltip("The start position")]
@@ -15,7 +15,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityDebug
 
         public override TaskStatus OnUpdate()
         {
-            Debug.DrawLine(start.Value, end.Value, color.Value);
+            UnityEngine.Debug.DrawLine(start.Value, end.Value, color.Value);
 
             return TaskStatus.Success;
         }

@@ -25,7 +25,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityRenderer
         public override TaskStatus OnUpdate()
         {
             if (renderer == null) {
-                Debug.LogWarning("Renderer is null");
+                UnityEngine.Debug.LogWarning("Renderer is null");
                 return TaskStatus.Failure;
             }
 

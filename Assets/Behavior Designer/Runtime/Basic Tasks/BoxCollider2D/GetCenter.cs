@@ -28,7 +28,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityBoxCollider2D
         public override TaskStatus OnUpdate()
         {
             if (boxCollider2D == null) {
-                Debug.LogWarning("BoxCollider2D is null");
+                UnityEngine.Debug.LogWarning("BoxCollider2D is null");
                 return TaskStatus.Failure;
             }
 

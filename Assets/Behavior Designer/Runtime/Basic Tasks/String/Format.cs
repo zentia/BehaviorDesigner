@@ -31,7 +31,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityString
             try {
                 storeResult.Value = string.Format(format.Value, variableValues);
             } catch (Exception e) {
-                Debug.LogError(e.Message);
+                UnityEngine.Debug.LogError(e.Message);
                 return TaskStatus.Failure;
             }
             return TaskStatus.Success;

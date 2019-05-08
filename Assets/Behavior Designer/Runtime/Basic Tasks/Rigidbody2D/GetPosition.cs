@@ -31,7 +31,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityRigidbody2D
         public override TaskStatus OnUpdate()
         {
             if (rigidbody2D == null) {
-                Debug.LogWarning("Rigidbody2D is null");
+                UnityEngine.Debug.LogWarning("Rigidbody2D is null");
                 return TaskStatus.Failure;
             }
 

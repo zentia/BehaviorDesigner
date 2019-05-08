@@ -26,7 +26,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityAudioSource
         public override TaskStatus OnUpdate()
         {
             if (audioSource == null) {
-                Debug.LogWarning("AudioSource is null");
+                UnityEngine.Debug.LogWarning("AudioSource is null");
                 return TaskStatus.Failure;
             }
 

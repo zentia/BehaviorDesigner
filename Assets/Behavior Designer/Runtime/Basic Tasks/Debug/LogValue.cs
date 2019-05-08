@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityDebug
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityUnityEngine.Debug
 {
-    [TaskCategory("Basic/Debug")]
+    [TaskCategory("Basic/UnityEngine.Debug")]
     [TaskDescription("Log a variable value.")]
     public class LogValue : Action
     {
@@ -11,7 +11,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityDebug
 
         public override TaskStatus OnUpdate()
         {
-            Debug.Log(variable.Value.value.GetValue());
+            UnityEngine.Debug.Log(variable.Value.value.GetValue());
 
             return TaskStatus.Success;
         }

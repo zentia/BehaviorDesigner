@@ -27,7 +27,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityCapsuleCollider
         public override TaskStatus OnUpdate()
         {
             if (capsuleCollider == null) {
-                Debug.LogWarning("CapsuleCollider is null");
+                UnityEngine.Debug.LogWarning("CapsuleCollider is null");
                 return TaskStatus.Failure;
             }
 

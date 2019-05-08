@@ -1,9 +1,9 @@
 using UnityEngine;
 
-namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityDebug
+namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityUnityEngine.Debug
 {
-    [TaskCategory("Basic/Debug")]
-    [TaskDescription("Draws a debug ray")]
+    [TaskCategory("Basic/UnityEngine.Debug")]
+    [TaskDescription("Draws a UnityEngine.Debug ray")]
     public class DrawRay : Action
     {
         [Tooltip("The position")]
@@ -15,7 +15,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityDebug
 
         public override TaskStatus OnUpdate()
         {
-            Debug.DrawRay(start.Value, direction.Value, color.Value);
+            UnityEngine.Debug.DrawRay(start.Value, direction.Value, color.Value);
 
             return TaskStatus.Success;
         }

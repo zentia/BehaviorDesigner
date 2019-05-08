@@ -31,7 +31,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityRigidbody
         public override TaskStatus OnUpdate()
         {
             if (rigidbody == null) {
-                Debug.LogWarning("Rigidbody is null");
+                UnityEngine.Debug.LogWarning("Rigidbody is null");
                 return TaskStatus.Failure;
             }
 

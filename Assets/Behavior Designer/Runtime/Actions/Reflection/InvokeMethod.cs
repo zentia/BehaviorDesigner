@@ -32,13 +32,13 @@ namespace BehaviorDesigner.Runtime.Tasks
         {
             var type = TaskUtility.GetTypeWithinAssembly(componentName.Value);
             if (type == null) {
-                Debug.LogWarning("Unable to invoke - type is null");
+                UnityEngine.Debug.LogWarning("Unable to invoke - type is null");
                 return TaskStatus.Failure;
             }
 
             var component = GetDefaultGameObject(targetGameObject.Value).GetComponent(type);
             if (component == null) {
-                Debug.LogWarning("Unable to invoke method with component " + componentName.Value);
+                UnityEngine.Debug.LogWarning("Unable to invoke method with component " + componentName.Value);
                 return TaskStatus.Failure;
             }
 
@@ -59,7 +59,7 @@ namespace BehaviorDesigner.Runtime.Tasks
             var methodInfo = component.GetType().GetMethod(methodName.Value, parameterTypeList.ToArray());
 
             if (methodInfo == null) {
-                Debug.LogWarning("Unable to invoke method " + methodName.Value + " on component " + componentName.Value);
+                UnityEngine.Debug.LogWarning("Unable to invoke method " + methodName.Value + " on component " + componentName.Value);
                 return TaskStatus.Failure;
             }
 

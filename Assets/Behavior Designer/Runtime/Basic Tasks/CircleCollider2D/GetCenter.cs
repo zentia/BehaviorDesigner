@@ -28,7 +28,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnityCircleCollider2D
         public override TaskStatus OnUpdate()
         {
             if (circleCollider2D == null) {
-                Debug.LogWarning("CircleCollider2D is null");
+                UnityEngine.Debug.LogWarning("CircleCollider2D is null");
                 return TaskStatus.Failure;
             }
 

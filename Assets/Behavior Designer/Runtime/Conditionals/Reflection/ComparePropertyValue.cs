@@ -22,19 +22,19 @@ namespace BehaviorDesigner.Runtime.Tasks
         public override TaskStatus OnUpdate()
         {
             if (compareValue == null) {
-                Debug.LogWarning("Unable to compare field - compare value is null");
+                UnityEngine.Debug.LogWarning("Unable to compare field - compare value is null");
                 return TaskStatus.Failure;
             }
             
             var type = TaskUtility.GetTypeWithinAssembly(componentName.Value);
             if (type == null) {
-                Debug.LogWarning("Unable to compare property - type is null");
+                UnityEngine.Debug.LogWarning("Unable to compare property - type is null");
                 return TaskStatus.Failure;
             }
 
             var component = GetDefaultGameObject(targetGameObject.Value).GetComponent(type);
             if (component == null) {
-                Debug.LogWarning("Unable to compare the property with component " + componentName.Value);
+                UnityEngine.Debug.LogWarning("Unable to compare the property with component " + componentName.Value);
                 return TaskStatus.Failure;
             }
 

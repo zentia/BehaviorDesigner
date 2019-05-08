@@ -13,7 +13,7 @@ namespace BehaviorDesigner.Runtime.Tasks
     [TaskIcon("{SkinColor}RandomSequenceIcon.png")]
     public class RandomSequence : Composite
     {
-        [Tooltip("Seed the random number generator to make things easier to debug")]
+        [Tooltip("Seed the random number generator to make things easier to UnityEngine.Debug")]
         public int seed = 0;
         [Tooltip("Do we want to use the seed?")]
         public bool useSeed = false;

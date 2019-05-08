@@ -8,7 +8,7 @@ namespace BehaviorDesigner.Runtime.Tasks
     {
         [Tooltip("The chance that the task will return success")]
         public SharedFloat successProbability = 0.5f;
-        [Tooltip("Seed the random number generator to make things easier to debug")]
+        [Tooltip("Seed the random number generator to make things easier to UnityEngine.Debug")]
         public SharedInt seed;
         [Tooltip("Do we want to use the seed?")]
         public SharedBool useSeed;

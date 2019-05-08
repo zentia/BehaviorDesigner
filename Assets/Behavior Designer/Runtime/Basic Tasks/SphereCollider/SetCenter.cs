@@ -26,7 +26,7 @@ namespace BehaviorDesigner.Runtime.Tasks.Basic.UnitySphereCollider
         public override TaskStatus OnUpdate()
         {
             if (sphereCollider == null) {
-                Debug.LogWarning("SphereCollider is null");
+                UnityEngine.Debug.LogWarning("SphereCollider is null");
                 return TaskStatus.Failure;
             }
 
