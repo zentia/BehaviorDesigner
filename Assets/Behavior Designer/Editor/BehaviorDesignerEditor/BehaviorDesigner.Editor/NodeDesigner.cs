@@ -378,7 +378,7 @@ namespace BehaviorDesigner.Editor
 				{
 					iconName = "{SkinColor}EntryIcon.png";
 				}
-				this.mTask.NodeData.Icon = BehaviorDesignerUtility.LoadIcon(iconName, null);
+				mTask.NodeData.Icon = BehaviorDesignerUtility.LoadIcon(iconName, null);
 			}
 		}
 
@@ -722,7 +722,7 @@ namespace BehaviorDesigner.Editor
 			}
 			if (!BehaviorDesignerPreferences.GetBool(BDPreferences.CompactMode))
 			{
-				GUI.DrawTexture(this.iconTextureRect, this.mTask.NodeData.Icon);
+				GUI.DrawTexture(iconTextureRect, mTask.NodeData.Icon);
 			}
 			if (this.mTask.NodeData.InterruptTime != -1f && Time.realtimeSinceStartup - this.mTask.NodeData.InterruptTime < 0.75f + num)
 			{

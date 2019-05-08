@@ -849,11 +849,11 @@ namespace BehaviorDesigner.Editor
 		{
 			get
 			{
-				if (BehaviorDesignerUtility.contentSeparatorTexture == null)
+				if (contentSeparatorTexture == null)
 				{
-					BehaviorDesignerUtility.InitContentSeparatorTexture();
+					InitContentSeparatorTexture();
 				}
-				return BehaviorDesignerUtility.contentSeparatorTexture;
+				return contentSeparatorTexture;
 			}
 		}
 
@@ -1461,7 +1461,35 @@ namespace BehaviorDesigner.Editor
 			return Path.GetDirectoryName(text.Substring(Application.dataPath.Length - 6));
 		}
 
+	    public static string RootDir = "Assets/Behavior Designer/Editor/BehaviorDesignerEditor/";
 		public static Texture2D LoadTexture(string imageName, bool useSkinColor = true, UnityEngine.Object obj = null)
+		{
+		    if (textureCache.TryGetValue(imageName, out Texture2D tex))
+		    {
+		        if (tex == null)
+		        {
+		            textureCache.Remove(imageName);
+		        }
+		        else
+		        {
+		            return tex;
+		        }
+		    }
+			
+			Texture2D texture2D = null;
+			string name = string.Format("{0}{1}", (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), imageName);
+			texture2D = AssetDatabase.LoadAssetAtPath<Texture2D>(RootDir + name);
+            if (texture2D != null)
+			    texture2D.hideFlags=(HideFlags.HideAndDontSave);
+            else
+            {
+                return null;
+            }
+			textureCache.Add(imageName, texture2D);
+			return texture2D;
+		}
+
+		private static Texture2D LoadTaskTexture(string imageName, bool useSkinColor = true, ScriptableObject obj = null)
 		{
 			if (textureCache.ContainsKey(imageName))
 			{
@@ -1469,73 +1497,26 @@ namespace BehaviorDesigner.Editor
 			}
 			Texture2D texture2D = null;
 			string name = string.Format("{0}{1}", (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), imageName);
-			Stream manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
-			if (manifestResourceStream == null)
-			{
-				name = string.Format("BehaviorDesignerEditor.Resources.{0}{1}", (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), imageName);
-				manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
-			}
-			if (manifestResourceStream != null)
-			{
-				texture2D = new Texture2D(0, 0, TextureFormat.RGBA32, false, true);
-				ImageConversion.LoadImage(texture2D, ReadToEnd(manifestResourceStream));
-				manifestResourceStream.Close();
-			}
-            if (texture2D != null)
-			    texture2D.hideFlags=(HideFlags.HideAndDontSave);
-			textureCache.Add(imageName, texture2D);
-			return texture2D;
-		}
-
-		private static Texture2D LoadTaskTexture(string imageName, bool useSkinColor = true, ScriptableObject obj = null)
-		{
-			if (BehaviorDesignerUtility.textureCache.ContainsKey(imageName))
-			{
-				return BehaviorDesignerUtility.textureCache[imageName];
-			}
-			Texture2D texture2D = null;
-			string name = string.Format("{0}{1}", (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), imageName);
-			Stream manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
-			if (manifestResourceStream == null)
-			{
-				name = string.Format("BehaviorDesignerEditor.Resources.{0}{1}", (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), imageName);
-				manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
-			}
-			if (manifestResourceStream != null)
-			{
-				texture2D = new Texture2D(0, 0, (TextureFormat)4, false, true);
-				ImageConversion.LoadImage(texture2D, BehaviorDesignerUtility.ReadToEnd(manifestResourceStream));
-				manifestResourceStream.Close();
-			}
+			texture2D = AssetDatabase.LoadAssetAtPath<Texture2D>(RootDir + name);
 			if (texture2D == null)
 			{
-				UnityEngine.Debug.Log(string.Format("{0}/Images/Task Backgrounds/{1}{2}", BehaviorDesignerUtility.GetEditorBaseDirectory(obj), (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), imageName));
+				Debug.Log(string.Format("{0}/Images/Task Backgrounds/{1}{2}", GetEditorBaseDirectory(obj), (!useSkinColor) ? string.Empty : ((!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), imageName));
+			    return null;
 			}
-			texture2D.hideFlags=(HideFlags)(61);
-			BehaviorDesignerUtility.textureCache.Add(imageName, texture2D);
+			texture2D.hideFlags= HideFlags.HideAndDontSave;
+			textureCache.Add(imageName, texture2D);
 			return texture2D;
 		}
 
 		public static Texture2D LoadIcon(string iconName, ScriptableObject obj = null)
 		{
-			if (BehaviorDesignerUtility.iconCache.ContainsKey(iconName))
+			if (iconCache.ContainsKey(iconName))
 			{
-				return BehaviorDesignerUtility.iconCache[iconName];
+				return iconCache[iconName];
 			}
 			Texture2D texture2D = null;
 			string name = iconName.Replace("{SkinColor}", (!EditorGUIUtility.isProSkin) ? "Light" : "Dark");
-			Stream manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
-			if (manifestResourceStream == null)
-			{
-				name = string.Format("BehaviorDesignerEditor.Resources.{0}", iconName.Replace("{SkinColor}", (!EditorGUIUtility.isProSkin) ? "Light" : "Dark"));
-				manifestResourceStream = Assembly.GetExecutingAssembly().GetManifestResourceStream(name);
-			}
-			if (manifestResourceStream != null)
-			{
-				texture2D = new Texture2D(0, 0, (TextureFormat)4, false, true);
-				ImageConversion.LoadImage(texture2D, BehaviorDesignerUtility.ReadToEnd(manifestResourceStream));
-				manifestResourceStream.Close();
-			}
+			texture2D = AssetDatabase.LoadAssetAtPath<Texture2D>(RootDir + name);
 			if (texture2D == null)
 			{
 				texture2D = (AssetDatabase.LoadAssetAtPath(iconName.Replace("{SkinColor}", (!EditorGUIUtility.isProSkin) ? "Light" : "Dark"), typeof(Texture2D)) as Texture2D);
@@ -1544,7 +1525,11 @@ namespace BehaviorDesigner.Editor
 			{
 				texture2D.hideFlags=(HideFlags)(61);
 			}
-			BehaviorDesignerUtility.iconCache.Add(iconName, texture2D);
+			else
+			{
+			    return null;
+			}
+			iconCache.Add(iconName, texture2D);
 			return texture2D;
 		}
 
@@ -1576,7 +1561,7 @@ namespace BehaviorDesigner.Editor
 			lastRect.y=(lastRect.y + (lastRect.height + (float)yOffset));
 			lastRect.height=(2f);
 			lastRect.width=(lastRect.width + (float)(10 + widthExtension));
-			GUI.DrawTexture(lastRect, BehaviorDesignerUtility.ContentSeparatorTexture);
+			GUI.DrawTexture(lastRect, ContentSeparatorTexture);
 		}
 
 		public static float RoundToNearest(float num, float baseNum)
@@ -2088,7 +2073,7 @@ namespace BehaviorDesigner.Editor
 
 		private static void InitContentSeparatorTexture()
 		{
-			BehaviorDesignerUtility.contentSeparatorTexture = BehaviorDesignerUtility.LoadTexture("ContentSeparator.png", true, null);
+			contentSeparatorTexture = LoadTexture("ContentSeparator.png");
 		}
 
 		private static void InitDocTexture()

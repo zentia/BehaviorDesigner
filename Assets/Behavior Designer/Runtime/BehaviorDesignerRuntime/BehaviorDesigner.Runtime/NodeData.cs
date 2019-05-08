@@ -115,11 +115,11 @@ namespace BehaviorDesigner.Runtime
 		{
 			get
 			{
-				return this.icon;
+				return icon;
 			}
 			set
 			{
-				this.icon = value;
+				icon = value;
 			}
 		}
 
